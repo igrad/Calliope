@@ -1,5 +1,4 @@
 #include <QtTest/QtTest>
-#include "filemanager.h"
 #include "page.h"
 #include "folder.h"
 

@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,7 +11,6 @@ CONFIG += c++11
 SOURCES += \
     UnitTests/Test_FolderStructurePersistence.cpp \
     UnitTests/Test_PageSaveAndLoad.cpp \
-    filemanager.cpp \
     folder.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -24,7 +23,6 @@ SOURCES += \
     workspaceview.cpp
 
 HEADERS += \
-    filemanager.h \
     folder.h \
     mainwindow.h \
     menubar.h \

@@ -1,13 +1,14 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <QObject>
+#include "folder.h"
 #include <iostream>
+#include "pagerecord.h"
+#include <QDebug>
+#include <QObject>
+#include <QUuid>
 #include <string>
 #include <sstream>
-#include "pagerecord.h"
-#include "filemanager.h"
-#include "folder.h"
 
 class Folder;
 class PageRecord;
@@ -16,37 +17,49 @@ class Page : public QObject
 {
     Q_OBJECT
 public:
-    // Instanced Functions
-    explicit Page(const std::string identifier = Page::NULL_ID,
+    explicit Page(const QUuid& identifier = NULLPAGEID,
+                  std::string fileName = "NewPage." + PAGE_FILE_EXTENSION,
                   Folder* parent = nullptr);
     Page(PageRecord* record, Folder* parent = nullptr);
-    void Open();
-    std::string GetIdentifier() const;
+
+    // Getters
+    QUuid GetIdentifier();
     std::filesystem::path GetFilePath() const;
     std::string GetData() const;
     bool IsOpen() const;
+
+    // Setters
     void SetData(const std::string data);
 
     // Static Methods
-    static bool IsIdentifierValid(const std::string identifier);
+    static bool IsIdentifierValid(const QUuid& identifier);
+    static void MakePageNameValid(QString& fileName);
+
+    // Operators
+    bool operator== (const Page& rhs);
+    bool operator== (const QUuid& rhs);
 
     // Static Constants
-    static const std::string NULL_ID;
     static int PAGE_COUNT;
-    static std::map<std::string, std::string> ID_MAP;
+    static std::map<QUuid, std::string> ID_MAP;
     static const std::string PAGE_FILE_EXTENSION;
 
-signals:
+public slots:
+    // Persistence
+    bool LoadFromFile();
+    bool SaveToFile();
+    bool DeleteFile();
 
-private slots:
-    // void IdentifierChanged(std::string newIdentifier);
+signals:
+    void IdentifierChanged(const QUuid& newIdentifier);
 
 protected:
-    void _SetIdentifier(const std::string identifier);
-    void _LoadPageContentFromFile();
-    void _SavePageContentToFile();
+    bool _FileExists();
+    void _SetIdentifier(const QUuid& identifier);
+    bool _LoadPageContentFromFile();
+    bool _SavePageContentToFile();
 
-    std::string _identifier;
+    QUuid _identifier;
     std::string _relativePath;
     std::string _fileName;
     std::filesystem::path _filePath;

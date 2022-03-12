@@ -1,48 +1,49 @@
 #ifndef PAGERECORD_H
 #define PAGERECORD_H
 
-#include <QObject>
-#include <iostream>
-#include <vector>
 #include <filesystem>
+#include <iostream>
+#include <QObject>
+#include <QUuid>
+#include <vector>
 
 extern std::string PAGERECORDFILEPATH;
+extern QUuid NULLPAGEID;
 
 class PageRecord: QObject
 {
     Q_OBJECT
 public:
-    PageRecord(std::string m_identifier = "",
+    PageRecord(QUuid& m_identifier = NULLPAGEID,
                std::string m_relativePath = "",
                std::string m_fileName = "");
     PageRecord(const PageRecord& record);
     ~PageRecord();
 
-    bool SetIdentifier(std::string m_identifier);
-
-    std::string identifier;
-    std::filesystem::path filePath;
+    bool SetIdentifier(QUuid& m_identifier);
 
     // Static members
-    static PageRecord* GetPageRecord(const std::string identifier);
-    static PageRecord* MakePageRecord(const std::string identifier,
+    static PageRecord* GetPageRecord(const QUuid& identifier);
+    static PageRecord* MakePageRecord(QUuid& identifier,
                                       const std::string relativePath,
                                       const std::string fileName);
 
     static void RemoveRecord(PageRecord* record);
-    static bool IdentifierIsInUse(const std::string identifier);
+    static bool IdentifierIsInUse(const QUuid& identifier);
 
-    static std::vector<PageRecord> ALL_PAGE_RECORDS;
-
-    bool operator== (const std::string identifier) const;
+    // Operators
+    bool operator== (const QUuid& rhs) const;
     bool operator== (const PageRecord* record) const;
     void operator= (const PageRecord& record);
 
+    static std::vector<PageRecord> ALL_PAGE_RECORDS;
+    QUuid& identifier;
+    std::filesystem::path filePath;
+
 signals:
-    void IdentifierChanged(std::string newIdentifier);
+    void IdentifierChanged(const QUuid& newIdentifier);
 
 private:
-    void _GenerateIdentifier();
     void _LoadRecordsFromFile();
 };
 
@@ -75,8 +76,8 @@ struct PageRecordNotFound : public PageRecordException
 
 struct PageIdentifierInUse : public PageRecordException
 {
-    PageIdentifierInUse(const std::string identifier)
-        : PageRecordException("Page identifier \"" + identifier + "\" is already in use!")
+    PageIdentifierInUse(const QUuid& identifier)
+        : PageRecordException("Page identifier \"" + identifier.toString().toStdString() + "\" is already in use!")
     {
 
     }

@@ -3,17 +3,18 @@
 #include <algorithm>
 
 std::string PAGERECORDFILEPATH = "";
+QUuid NULLPAGEID = QUuid();
 
 std::vector<PageRecord> PageRecord::ALL_PAGE_RECORDS;
 
-PageRecord::PageRecord(std::string m_identifier,
+PageRecord::PageRecord(QUuid& m_identifier,
                        std::string m_relativePath,
                        std::string m_fileName)
   : identifier(m_identifier)
 {
-    if(m_identifier == "")
+    if(m_identifier.isNull())
     {
-        _GenerateIdentifier();
+        identifier = QUuid::createUuid();
     }
 
     filePath = PAGERECORDFILEPATH + m_relativePath + m_fileName;
@@ -32,7 +33,7 @@ PageRecord::~PageRecord()
     RemoveRecord(this);
 }
 
-bool PageRecord::SetIdentifier(std::string m_identifier)
+bool PageRecord::SetIdentifier(QUuid& m_identifier)
 {
     if(!IdentifierIsInUse(m_identifier))
     {
@@ -46,7 +47,7 @@ bool PageRecord::SetIdentifier(std::string m_identifier)
     return false;
 }
 
-PageRecord& GetPageRecord(const std::string identifier)
+PageRecord& GetPageRecord(const QUuid& identifier)
 {
     // For now, use a dumb linear search function. This can be improved later on
     for(auto iter = PageRecord::ALL_PAGE_RECORDS.begin();
@@ -59,15 +60,15 @@ PageRecord& GetPageRecord(const std::string identifier)
         }
     }
 
-    throw PageRecordNotFound(identifier);
+    throw PageRecordNotFound(identifier.toString().toStdString());
 }
 
-PageRecord* PageRecord::GetPageRecord(const std::string identifier)
+PageRecord* PageRecord::GetPageRecord(const QUuid& identifier)
 {
     return &(*std::find(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), identifier));
 }
 
-PageRecord* PageRecord::MakePageRecord(const std::string identifier,
+PageRecord* PageRecord::MakePageRecord(QUuid& identifier,
                                        std::string relativePath,
                                        std::string fileName)
 {
@@ -85,14 +86,14 @@ void PageRecord::RemoveRecord(PageRecord *record)
     std::remove(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), record);
 }
 
-bool PageRecord::IdentifierIsInUse(const std::string identifier)
+bool PageRecord::IdentifierIsInUse(const QUuid& identifier)
 {
     return ALL_PAGE_RECORDS.end() == std::find(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), identifier);
 }
 
-bool PageRecord::operator==(const std::string identifier) const
+bool PageRecord::operator==(const QUuid& rhs) const
 {
-    return this->identifier == identifier;
+    return identifier == rhs;
 }
 
 bool PageRecord::operator==(const PageRecord *record) const
@@ -104,37 +105,10 @@ void PageRecord::operator=(const PageRecord& record)
 {
     if(IdentifierIsInUse(identifier))
     {
-        throw PageIdentifierInUse("Cannot reassign a pageRecord without proper teardown first, might cause duplication!");
+        throw PageIdentifierInUse(identifier);
     }
     identifier = record.identifier;
     filePath = record.filePath;
-}
-
-void PageRecord::_GenerateIdentifier()
-{
-    bool generating = true;
-
-    while(generating)
-    {
-        int randNum = rand();
-
-        if(randNum == 0)
-        {
-            continue;
-        }
-        else if(!IdentifierIsInUse(std::to_string(randNum)))
-        {
-            char hexString[8];
-            sprintf(hexString, "%X", randNum);
-            identifier = hexString;
-
-            generating = false;
-        }
-        else
-        {
-            continue;
-        }
-    }
 }
 
 void PageRecord::_LoadRecordsFromFile()

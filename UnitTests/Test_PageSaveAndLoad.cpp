@@ -1,5 +1,10 @@
-#include <QtTest/QtTest>
 #include <page.h>
+#include <QtTest/QtTest>
+
+namespace
+{
+    const std::string TESTSTRING = "test string";
+}
 
 class Test_PageSaveAndLoad: public QObject
 {
@@ -8,43 +13,31 @@ class Test_PageSaveAndLoad: public QObject
 private slots:
     void SaveToFile()
     {
-        const std::string testString = "test string";
         Page page("z_test_page");
-        FileManager fm;
 
-        page.SetData(testString);
+        page.SetData(TESTSTRING);
+        page.SaveToFile();
 
-        try {
-            fm.SavePageToFile(page);
+        page.SetData("");
+        QVERIFY(page.GetData() == "");
 
-            page.SetData("");
+        page.LoadFromFile();
+        QVERIFY(page.GetData() == TESTSTRING);
 
-            fm.LoadPageFromFile(page);
-            QVERIFY(page.GetData() == testString);
-
-            fm.DeleteFile(page);
-        }  catch (...) {
-            QFAIL("Failed to save page to file");
-        }
+        page.DeleteFile();
     }
 
     void LoadFromFile()
     {
-        const std::string testString = "test string";
         Page page("z_test_page");
-        FileManager fm;
 
-        page.SetData(testString);
-        fm.SavePageToFile(page);
+        page.SetData(TESTSTRING);
+        page.SaveToFile();
 
-        try {
-            Page loadedPage("z_test_page");
-            page.SetData("");
+        Page loadedPage("z_test_page");
+        page.SetData("");
 
-            fm.LoadPageFromFile(page);
-            QVERIFY(page.GetData() == testString);
-        }  catch (...) {
-            QFAIL("Failed to save page to file");
-        }
+        page.LoadFromFile();
+        QVERIFY(page.GetData() == TESTSTRING);
     }
 };

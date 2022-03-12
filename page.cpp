@@ -2,14 +2,13 @@
 
 
 // Static Constants
-const std::string Page::NULL_ID = "NULL_IDENTIFIER";
 int Page::PAGE_COUNT = 0;
-std::map<std::string, std::string> Page::ID_MAP;
+std::map<QUuid, std::string> Page::ID_MAP;
 const std::string Page::PAGE_FILE_EXTENSION = ".md";
 
 
 // Constructor Definitions
-Page::Page(const std::string identifier,
+Page::Page(const QUuid& identifier,
            Folder* parent)
 {
     if(PageRecord::IdentifierIsInUse(identifier))
@@ -32,11 +31,11 @@ Page::Page(PageRecord* record, Folder* parent)
     , _pageRecord(record)
 {
     _relativePath = parent->GetRelativePathString();
-    FileManager::MakeFileNameValid(_identifier);
+    FileManager::MakeFileNameValid(record->);
 }
 
 
-std::string Page::GetIdentifier() const
+QUuid Page::GetIdentifier()
 {
     return _identifier;
 }
@@ -56,7 +55,35 @@ void Page::SetData(const std::string data)
     _pageData = data;
 }
 
-void Page::_SetIdentifier(const std::string identifier)
+bool Page::LoadFromFile()
+{
+    return _LoadPageContentFromFile();
+}
+
+bool Page::SaveToFile()
+{
+    return true;
+}
+
+bool Page::DeleteFile()
+{
+    if(_FileExists())
+    {
+        return remove(_filePath) != 0;
+    }
+    else
+    {
+        qDebug() << "Page::DeleteFile: Cannot delete page file that does not exist!";
+        return false;
+    }
+}
+
+bool Page::_FileExists()
+{
+    return std::filesystem::exists(_filePath);
+}
+
+void Page::_SetIdentifier(const QUuid& identifier)
 {
     // If the identifier is not within the ID_MAP already, it's usable
     if(IsIdentifierValid(identifier))
@@ -70,19 +97,100 @@ void Page::_SetIdentifier(const std::string identifier)
     }
 }
 
-void Page::_LoadPageContentFromFile()
+bool Page::_LoadPageContentFromFile()
 {
+    std::ifstream openFile;
+    _isOpen = false;
 
+    try
+    {
+        openFile.open(_filePath, std::ios::in);
+
+        if(openFile.is_open())
+        {
+            std::stringstream pageData;
+            pageData << openFile.rdbuf();
+            SetData(pageData.str());
+            openFile.close();
+
+            _isOpen = true;
+
+            return true;
+        }
+        return false;
+    }
+    catch (...)
+    {
+        if(openFile.is_open())
+        {
+            openFile.close();
+        }
+
+        // TODO: Elaborate on this error readout
+        std::cout << "Error reading data from file! path: " << _filePath
+                  << std::endl;
+        return false;
+    }
 }
 
-void Page::_SavePageContentToFile()
+bool Page::_SavePageContentToFile()
 {
-    FileManager::SavePageToFile(*this);
+    std::ofstream openFile;
+
+    try
+    {
+        openFile.open(_filePath, std::ios::out);
+
+        if(openFile.is_open())
+        {
+            openFile << _pageData;
+            openFile.close();
+        }
+
+        return true;
+    }
+    catch (...)
+    {
+        if(openFile.is_open())
+        {
+            openFile.close();
+        }
+
+        // TODO: Elaborate on this error readout
+        std::cout << "Error writing data to file! path: " << _filePath << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 
 // Static Methods
-bool Page::IsIdentifierValid(const std::string identifier)
+bool Page::IsIdentifierValid(const QUuid& identifier)
 {
     return ID_MAP.find(identifier) != ID_MAP.end();
+}
+
+void Page::MakePageNameValid(QString& fileName)
+{
+    char forbiddenChars[10] = {'<', '>', ':', ';', '\"', '/', '\\', '|', '?', '*'};
+    int numForbiddenChars = 10;
+
+    for(int iter = 0; iter < numForbiddenChars; ++iter)
+    {
+        char ch = forbiddenChars[iter];
+        std::remove_if(fileName.begin(), fileName.end(), [ch](char x){return x == ch;});
+    }
+}
+
+
+// Operators
+bool Page::operator==(const Page &rhs)
+{
+    return _identifier == rhs.GetIdentifier();
+}
+
+bool Page::operator==(const QUuid &rhs)
+{
+    return _identifier == rhs;
 }
