@@ -1,10 +1,10 @@
 #include "notebook.h"
 
-Notebook::Notebook(const std::string identifier,
+Notebook::Notebook(QUuid identifier,
                    const std::string displayName,
-                   Folder* parent):
-    Folder(identifier, displayName, parent),
-    _dataFilePath("")
+                   Folder* parent)
+    : Folder(identifier, displayName, parent)
+    , _dataFilePath("")
 {
 
 }

@@ -2,8 +2,8 @@
 
 Folder FolderRootFolder();
 
-Folder::Folder(std::string displayName,
-               std::string identifier,
+Folder::Folder(QUuid identifier,
+               std::string displayName,
                Folder* parent):
     _identifier(identifier),
     _displayName(displayName),
@@ -13,7 +13,7 @@ Folder::Folder(std::string displayName,
     _ancestry.push_back(parent);
 }
 
-std::string Folder::GetIdentifier() const
+const QUuid& Folder::GetIdentifier() const
 {
     return _identifier;
 }
@@ -55,7 +55,7 @@ std::string Folder::GetRelativePathString()
     }
 }
 
-bool Folder::Contains(const std::string identifier)
+bool Folder::Contains(const QUuid& identifier)
 {
     return _pages.find(identifier) != _pages.end();
 }

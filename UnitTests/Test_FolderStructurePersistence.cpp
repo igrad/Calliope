@@ -1,6 +1,7 @@
-#include <QtTest/QtTest>
-#include "page.h"
 #include "folder.h"
+#include "page.h"
+#include <QUuid>
+#include <QtTest/QtTest>
 
 class Test_FolderStructurePersistenceTest: public QObject
 {
@@ -9,8 +10,10 @@ class Test_FolderStructurePersistenceTest: public QObject
 private slots:
     void SaveAncestryToFile()
     {
-        Folder f1("Folder 1", "ID1", &Folder::RootFolder);
-        Folder f2("Folder 2", "ID2", &f1);
+        const QUuid f1ID = QUuid::createUuid();
+        const QUuid f2ID = QUuid::createUuid();
+        Folder f1(f1ID, "Folder 1", &Folder::RootFolder);
+        Folder f2(f2ID, "Folder 2", &f1);
 
         QVERIFY(true);
     }

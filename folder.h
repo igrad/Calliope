@@ -1,7 +1,15 @@
 #ifndef FOLDER_H
 #define FOLDER_H
 
+#include <map>
 #include "page.h"
+#include <QUuid>
+#include <string>
+#include <vector>
+
+// Filesystem (and other classes that use filesystem) is put last due to a Qt bug.
+// See https://bugreports.qt.io/browse/QTBUG-73263
+#include <filesystem>
 
 class Page;
 
@@ -9,11 +17,11 @@ class Page;
 class Folder
 {
 public:
-    Folder(std::string displayName,
-           std::string identifier,
+    Folder(QUuid identifier,
+           std::string displayName,
            Folder* parent = nullptr);
 
-    std::string GetIdentifier() const;
+    const QUuid& GetIdentifier() const;
     int GetPageCount();
     int GetFolderCount();
     int GetItemCount();
@@ -22,7 +30,7 @@ public:
     std::string GetRelativePathString();
 
     bool Contains(Page &page);
-    bool Contains(const std::string identifier);
+    bool Contains(const QUuid& identifier);
     bool Contains(Folder &folder);
 
     bool Add(Page* page);
@@ -34,13 +42,13 @@ public:
     static Folder RootFolder;
 
 protected:
-    std::string _identifier;
+    QUuid _identifier;
     std::string _displayName;
     std::filesystem::path _path;
     std::vector<Folder*> _ancestry;
     Folder* _parent;
-    std::map<std::string, Folder*> _folders;
-    std::map<std::string, Page*> _pages;
+    std::map<QUuid, Folder*> _folders;
+    std::map<QUuid, Page*> _pages;
 };
 
 

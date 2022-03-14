@@ -8,8 +8,11 @@ const std::string Page::PAGE_FILE_EXTENSION = ".md";
 
 
 // Constructor Definitions
-Page::Page(const QUuid& identifier,
+Page::Page(QUuid& identifier,
+           std::string fileName,
            Folder* parent)
+    : _identifier(identifier)
+    , _fileName(fileName)
 {
     if(PageRecord::IdentifierIsInUse(identifier))
     {
@@ -18,7 +21,7 @@ Page::Page(const QUuid& identifier,
     else
     {
         _relativePath = parent->GetRelativePathString();
-        FileManager::MakeFileNameValid(_identifier);
+        MakePageNameValid(_fileName);
         _pageRecord = PageRecord::MakePageRecord(identifier, _relativePath, _fileName);
         _identifier = _pageRecord->identifier;
         _filePath = _pageRecord->filePath;
@@ -31,11 +34,11 @@ Page::Page(PageRecord* record, Folder* parent)
     , _pageRecord(record)
 {
     _relativePath = parent->GetRelativePathString();
-    FileManager::MakeFileNameValid(record->);
+    MakePageNameValid(_fileName);
 }
 
 
-QUuid Page::GetIdentifier()
+const QUuid Page::GetIdentifier() const
 {
     return _identifier;
 }
@@ -93,13 +96,13 @@ void Page::_SetIdentifier(const QUuid& identifier)
         const std::string path = "";
         ID_MAP[identifier] = path;
 
-        _pageRecord->SetIdentifier(identifier);
+        _pageRecord->SetIdentifier(_identifier);
     }
 }
 
 bool Page::_LoadPageContentFromFile()
 {
-    std::ifstream openFile;
+    std::fstream openFile;
     _isOpen = false;
 
     try
@@ -135,7 +138,7 @@ bool Page::_LoadPageContentFromFile()
 
 bool Page::_SavePageContentToFile()
 {
-    std::ofstream openFile;
+    std::fstream openFile;
 
     try
     {
@@ -171,7 +174,7 @@ bool Page::IsIdentifierValid(const QUuid& identifier)
     return ID_MAP.find(identifier) != ID_MAP.end();
 }
 
-void Page::MakePageNameValid(QString& fileName)
+void Page::MakePageNameValid(std::string& fileName)
 {
     char forbiddenChars[10] = {'<', '>', ':', ';', '\"', '/', '\\', '|', '?', '*'};
     int numForbiddenChars = 10;

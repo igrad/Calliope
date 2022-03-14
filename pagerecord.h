@@ -1,11 +1,14 @@
 #ifndef PAGERECORD_H
 #define PAGERECORD_H
 
-#include <filesystem>
 #include <iostream>
 #include <QObject>
 #include <QUuid>
 #include <vector>
+
+// Filesystem (and other classes that use filesystem) is put last due to a Qt bug.
+// See https://bugreports.qt.io/browse/QTBUG-73263
+#include <filesystem>
 
 extern std::string PAGERECORDFILEPATH;
 extern QUuid NULLPAGEID;

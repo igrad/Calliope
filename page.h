@@ -2,6 +2,7 @@
 #define PAGE_H
 
 #include "folder.h"
+#include <fstream>
 #include <iostream>
 #include "pagerecord.h"
 #include <QDebug>
@@ -17,13 +18,13 @@ class Page : public QObject
 {
     Q_OBJECT
 public:
-    explicit Page(const QUuid& identifier = NULLPAGEID,
+    explicit Page(QUuid& identifier = NULLPAGEID,
                   std::string fileName = "NewPage." + PAGE_FILE_EXTENSION,
                   Folder* parent = nullptr);
     Page(PageRecord* record, Folder* parent = nullptr);
 
     // Getters
-    QUuid GetIdentifier();
+    const QUuid GetIdentifier() const;
     std::filesystem::path GetFilePath() const;
     std::string GetData() const;
     bool IsOpen() const;
@@ -33,7 +34,7 @@ public:
 
     // Static Methods
     static bool IsIdentifierValid(const QUuid& identifier);
-    static void MakePageNameValid(QString& fileName);
+    static void MakePageNameValid(std::string& fileName);
 
     // Operators
     bool operator== (const Page& rhs);

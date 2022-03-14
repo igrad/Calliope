@@ -13,7 +13,8 @@ class Test_PageSaveAndLoad: public QObject
 private slots:
     void SaveToFile()
     {
-        Page page("z_test_page");
+        QUuid pageID = QUuid::createUuid();
+        Page page(pageID, "z_test_page.md", nullptr);
 
         page.SetData(TESTSTRING);
         page.SaveToFile();
@@ -29,15 +30,16 @@ private slots:
 
     void LoadFromFile()
     {
-        Page page("z_test_page");
+        QUuid pageID = QUuid::createUuid();
+        Page page(pageID, "z_test_page.md", nullptr);
 
         page.SetData(TESTSTRING);
         page.SaveToFile();
 
-        Page loadedPage("z_test_page");
-        page.SetData("");
+        Page loadedPage(pageID, "z_test_page.md", nullptr);
+        loadedPage.SetData("");
 
-        page.LoadFromFile();
-        QVERIFY(page.GetData() == TESTSTRING);
+        loadedPage.LoadFromFile();
+        QVERIFY(loadedPage.GetData() == TESTSTRING);
     }
 };

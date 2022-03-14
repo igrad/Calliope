@@ -2,12 +2,12 @@
 #define NOTEBOOK_H
 
 #include "folder.h"
-
+#include <QUuid>
 
 class Notebook: public Folder
 {
 public:
-    Notebook(const std::string identifier,
+    Notebook(QUuid identifier,
              const std::string displayName,
              Folder* parent);
 
