@@ -3,7 +3,7 @@
 
 namespace
 {
-    const std::string TESTSTRING = "test string";
+    static std::string TESTSTRING = "test string";
 }
 
 class Test_PageSaveAndLoad: public QObject
@@ -41,5 +41,16 @@ private slots:
 
         loadedPage.LoadFromFile();
         QVERIFY(loadedPage.GetData() == TESTSTRING);
+
+        page.DeleteFile();
+        loadedPage.DeleteFile();
+    }
+
+    void DeleteFile()
+    {
+        QUuid pageID = QUuid::createUuid();
+        Page page(pageID, "z_test_page.md", nullptr);
+
+        QVERIFY(page.DeleteFile() == true);
     }
 };

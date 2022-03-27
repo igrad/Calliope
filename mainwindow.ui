@@ -31,10 +31,14 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QVBoxLayout" name="L_Explorer" stretch=""/>
+      <layout class="QVBoxLayout" name="L_Explorer"/>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="L_EditorTabs" stretch=""/>
+      <layout class="QVBoxLayout" name="L_EditorTabs">
+       <item>
+        <widget class="QTextEdit" name="testTextEdit"/>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>

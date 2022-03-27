@@ -19,6 +19,7 @@ SOURCES += \
     page.cpp \
     pageeditview.cpp \
     pagerecord.cpp \
+    sessiondatamanager.cpp \
     testmanager.cpp \
     workspaceview.cpp
 
@@ -27,9 +28,11 @@ HEADERS += \
     mainwindow.h \
     menubar.h \
     notebook.h \
+    osdefines.h \
     page.h \
     pageeditview.h \
     pagerecord.h \
+    sessiondatamanager.h \
     testmanager.h \
     workspaceview.h
 

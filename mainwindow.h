@@ -18,7 +18,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void ConfigureChildren();
+    void ConfigureChildren(QLayout& gridLayout);
+    void Initialize();
+    void LoadUserData();
 
     QWidget inner;
     WorkspaceView workspaceView;
