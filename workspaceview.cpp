@@ -1,8 +1,9 @@
 #include <QFileSystemModel>
 #include "workspaceview.h"
 
-WorkspaceView::WorkspaceView(QWidget* parent):
-    QWidget(parent)
+WorkspaceView::WorkspaceView(const SessionDataManager* sessionData, QWidget* parent)
+    : QWidget(parent)
+    , SessionData(sessionData)
 {
     QFileSystemModel viewer(this);
 }

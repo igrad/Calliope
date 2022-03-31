@@ -1,7 +1,7 @@
 #ifndef SESSIONDATA_H
 #define SESSIONDATA_H
 
-#include <string>
+#include "osdefines.h"
 #include <QObject>
 
 namespace TempDataService
@@ -38,25 +38,25 @@ namespace TempDataService
     public:
         explicit SessionDataManager();
 
-        static void LoadUserData();
-        static void SaveUserData();
+        void LoadUserData();
+        void SaveUserData();
 
         template <class ValType>
-        static ValType GetVar(SaveVarKey key);
+        ValType GetVar(SaveVarKey key);
         template <class ValType>
-        static void SetVar(SaveVarKey key, ValType value);
+        void SetVar(SaveVarKey key, ValType value);
 
     signals:
-        static void UserDataLoaded();
-        static void UserDataSaved();
+        void UserDataLoaded();
+        void UserDataSaved();
 
     private:
-        static std::string _Get(SaveVarKey key);
-        static void _Set(SaveVarKey key, std::string value);
+        std::string _Get(SaveVarKey key);
+        void _Set(SaveVarKey key, std::string value);
 
-        static std::map<SaveVarKey, std::string> cachedStringVars;
-        static std::vector<std::string> cachedActivePages;
-        static std::vector<std::string> cachedOpenPages;
+        std::map<SaveVarKey, std::string> cachedStringVars;
+        std::vector<std::string> cachedActivePages;
+        std::vector<std::string> cachedOpenPages;
     };
 }
 

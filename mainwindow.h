@@ -1,14 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include "workspaceview.h"
 #include "menubar.h"
 #include "pageeditview.h"
+#include "workspaceview.h"
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+
+using namespace TempDataService;
 
 class MainWindow : public QMainWindow
 {
@@ -29,5 +32,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    const SessionDataManager SessionData;
 };
 #endif // MAINWINDOW_H

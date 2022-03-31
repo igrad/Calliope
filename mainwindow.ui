@@ -31,10 +31,17 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QVBoxLayout" name="L_Explorer"/>
+      <layout class="QVBoxLayout" name="L_Explorer" stretch="">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
+      </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="L_EditorTabs">
+      <layout class="QVBoxLayout" name="L_EditorTabs" stretch="0">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMaximumSize</enum>
+       </property>
        <item>
         <widget class="QTextEdit" name="testTextEdit"/>
        </item>

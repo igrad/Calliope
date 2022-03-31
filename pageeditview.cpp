@@ -1,6 +1,8 @@
 #include "pageeditview.h"
 
-PageEditView::PageEditView(QWidget *parent) : QWidget(parent)
+PageEditView::PageEditView(const SessionDataManager* sessionData, QWidget *parent)
+    : QWidget(parent)
+    , SessionData(sessionData)
 {
 
 }

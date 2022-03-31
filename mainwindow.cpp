@@ -1,7 +1,7 @@
 #include <QGridLayout>
 
 #include "mainwindow.h"
-#include "osdefines.h"
+//#include "osdefines.h"
 #include "ui_mainwindow.h"
 #include "workspaceview.h"
 #include <fstream>
@@ -9,10 +9,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , inner(QWidget())
-    , workspaceView(WorkspaceView())
-    , menuBar(MenuBar())
-    , pageEditView(PageEditView())
+    , workspaceView(WorkspaceView(&SessionData))
+    , menuBar(MenuBar(&SessionData))
+    , pageEditView(PageEditView(&SessionData))
     , ui(new Ui::MainWindow)
+    , SessionData(SessionDataManager())
 {
     ui->setupUi(this);
 
@@ -23,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     LoadUserData();
 
     // Restore back to where we left off!
-    Initialize();
+//    Initialize();
 
     // Demo stuff
     ui->testTextEdit->setText("Hello world!");
@@ -54,6 +55,6 @@ void MainWindow::ConfigureChildren(QLayout& gridLayout)
 void MainWindow::LoadUserData()
 {
     std::filesystem::path sessionDataFile = GetTempDataFileName();
-    std::fstream f(sessionDataFile, ios_base::in);
+    std::fstream f(sessionDataFile, std::ios_base::in);
 
 }

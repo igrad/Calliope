@@ -1,4 +1,4 @@
-#include <page.h>
+#include "page.h"
 #include <QtTest/QtTest>
 
 namespace

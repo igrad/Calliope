@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     UnitTests/Test_FolderStructurePersistence.cpp \
     UnitTests/Test_PageSaveAndLoad.cpp \
+    UnitTests/Test_TempDataPersistence.cpp \
     folder.cpp \
     main.cpp \
     mainwindow.cpp \

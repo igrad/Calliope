@@ -1,4 +1,3 @@
-#include "osdefines.h"
 #include "sessiondatamanager.h"
 
 #include <fstream>

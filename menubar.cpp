@@ -1,6 +1,8 @@
 #include "menubar.h"
 
-MenuBar::MenuBar(QWidget *parent) : QWidget(parent)
+MenuBar::MenuBar(const SessionDataManager* sessionData, QWidget *parent)
+    : QWidget(parent)
+    , SessionData(sessionData)
 {
 
 }
