@@ -1,7 +1,7 @@
 #include "pageeditview.h"
 
 PageEditView::PageEditView(const SessionDataManager* sessionData, QWidget *parent)
-    : QWidget(parent)
+    : QPlainTextEdit(parent)
     , SessionData(sessionData)
 {
 
@@ -9,5 +9,5 @@ PageEditView::PageEditView(const SessionDataManager* sessionData, QWidget *paren
 
 void PageEditView::configure()
 {
-
+    setPlainText(QString("Lorem ipsum"));
 }

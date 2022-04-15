@@ -6,11 +6,6 @@
 #include "workspaceview.h"
 #include <QMainWindow>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
-
 using namespace TempDataService;
 
 class MainWindow : public QMainWindow
@@ -31,7 +26,6 @@ public:
     PageEditView pageEditView;
 
 private:
-    Ui::MainWindow *ui;
     const SessionDataManager SessionData;
 };
 #endif // MAINWINDOW_H

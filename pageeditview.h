@@ -2,11 +2,11 @@
 #define PAGEEDITVIEW_H
 
 #include "sessiondatamanager.h"
-#include <QWidget>
+#include <QPlainTextEdit>
 
 using namespace TempDataService;
 
-class PageEditView : public QWidget
+class PageEditView : public QPlainTextEdit
 {
     Q_OBJECT
 public:

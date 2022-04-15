@@ -43,3 +43,5 @@ target_wrapper.*
 CMakeLists.txt.user*
 
 Calliope
+
+Calliope_Journal/.obsidian/

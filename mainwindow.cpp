@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     , workspaceView(WorkspaceView(&SessionData))
     , menuBar(MenuBar(&SessionData))
     , pageEditView(PageEditView(&SessionData))
-    , ui(new Ui::MainWindow)
     , SessionData(SessionDataManager())
 {
-    ui->setupUi(this);
+    setCentralWidget(&inner);
+    setWindowTitle("Calliope Dev");
 
     QGridLayout gridLayout;
     ConfigureChildren(gridLayout);
@@ -27,13 +27,12 @@ MainWindow::MainWindow(QWidget *parent)
 //    Initialize();
 
     // Demo stuff
-    ui->testTextEdit->setText("Hello world!");
-    setCentralWidget(&inner);
+//    ui->testTextEdit->setText("Hello world!");
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+
 }
 
 void MainWindow::ConfigureChildren(QLayout& gridLayout)
@@ -45,8 +44,8 @@ void MainWindow::ConfigureChildren(QLayout& gridLayout)
     pageEditView.configure();
 
     // Add to main widget
-    gridLayout.addWidget(&menuBar);
-    gridLayout.addWidget(&workspaceView);
+//    gridLayout.addWidget(&menuBar);
+//    gridLayout.addWidget(&workspaceView);
     gridLayout.addWidget(&pageEditView);
 
     inner.setLayout(&gridLayout);

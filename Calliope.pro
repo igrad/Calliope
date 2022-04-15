@@ -37,8 +37,7 @@ HEADERS += \
     testmanager.h \
     workspaceview.h
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -3,6 +3,7 @@
 
 #include "sessiondatamanager.h"
 #include <QWidget>
+#include <QPushButton>
 
 using namespace TempDataService;
 
