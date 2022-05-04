@@ -8,20 +8,20 @@ class Notebook: public Folder
 {
 public:
     Notebook(QUuid identifier,
-             const std::string displayName,
+             const QString displayName,
              Folder* parent);
 
-    void AddFolder(const Folder &folder);
-    void AddPage(const Page &page);
+    void addFolder(const Folder &folder);
+    void addPage(const Page &page);
 
 private:
-    std::vector<Folder*> _folders;
-    std::vector<Page*> _pages;
+    FolderPtrVector folders;
+    PagePtrVector pages;
 
-    std::string _displayName;
-    std::string _identifier;
+    QString displayName;
+    QUuid identifier;
 
-    std::string _dataFilePath;
+    std::filesystem::path dataFilePath;
 };
 
 #endif // NOTEBOOK_H

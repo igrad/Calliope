@@ -1,6 +1,8 @@
 #ifndef SESSIONDATA_H
 #define SESSIONDATA_H
 
+#include "page.h"
+#include "pages.h"
 #include "osdefines.h"
 #include <QObject>
 
@@ -15,7 +17,7 @@ namespace TempDataService
         FONT_SIZE,
         ZOOM,
         ACTIVE_PAGES,
-        LAST_OPEN_PAGES,
+        LAST_VIEWED_PAGES,
     };
 
     // If this does not directly match the names of the SaveVarKey enum values,
@@ -28,7 +30,7 @@ namespace TempDataService
         {"FONT_SIZE", SaveVarKey::FONT_SIZE},
         {"ZOOM", SaveVarKey::ZOOM},
         {"ACTIVE_PAGES", SaveVarKey::ACTIVE_PAGES},
-        {"LAST_OPEN_PAGES", SaveVarKey::LAST_OPEN_PAGES},
+        {"LAST_VIEWED_PAGES", SaveVarKey::LAST_VIEWED_PAGES},
     };
 
 
@@ -38,25 +40,27 @@ namespace TempDataService
     public:
         explicit SessionDataManager();
 
-        void LoadUserData();
-        void SaveUserData();
+        void loadUserData();
+        void saveUserData();
 
         template <class ValType>
-        ValType GetVar(SaveVarKey key);
+        ValType getVar(SaveVarKey key);
         template <class ValType>
-        void SetVar(SaveVarKey key, ValType value);
+        void setVar(SaveVarKey key, ValType value);
+
+        void getLastViewedPages(PagePtrList& pageList);
 
     signals:
-        void UserDataLoaded();
-        void UserDataSaved();
+        void userDataLoaded();
+        void userDataSaved();
 
     private:
-        std::string _Get(SaveVarKey key);
-        void _Set(SaveVarKey key, std::string value);
+        std::string _get(SaveVarKey key);
+        void _set(SaveVarKey key, std::string value);
 
         std::map<SaveVarKey, std::string> cachedStringVars;
         std::vector<std::string> cachedActivePages;
-        std::vector<std::string> cachedOpenPages;
+        std::vector<std::string> cachedViewedPages;
     };
 }
 

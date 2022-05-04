@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "menubar.h"
+#include "pages.h"
 #include "pageeditview.h"
 #include "workspaceview.h"
 #include <QMainWindow>
@@ -16,9 +17,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void ConfigureChildren(QLayout& gridLayout);
-    void Initialize();
-    void LoadUserData();
+    void configureChildren(QLayout& gridLayout);
+    void initialize();
+    void loadUserData();
 
     QWidget inner;
     WorkspaceView workspaceView;
@@ -26,6 +27,8 @@ public:
     PageEditView pageEditView;
 
 private:
-    const SessionDataManager SessionData;
+    PagePtrList lastActivePages;
+    PagePtrList loadedPages;
+    SessionDataManager sessionData;
 };
 #endif // MAINWINDOW_H

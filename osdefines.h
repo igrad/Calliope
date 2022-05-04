@@ -10,7 +10,7 @@ namespace TempDataService
     constexpr char SESSIONDATAFILENAME[] = "sessiondata";
     constexpr char SESSIONDATAFILEEXTENSION[] = ".json";
 
-    inline std::string GetOperatingSystem()
+    inline std::string getOperatingSystem()
     {
         #ifdef _WIN32
         return "Windows 32-bit";
@@ -29,24 +29,24 @@ namespace TempDataService
         #endif
     }
 
-    inline std::filesystem::path GetTempDirPath()
+    inline std::filesystem::path getTempDirPath()
     {
         return std::filesystem::temp_directory_path();
     }
 
-    inline std::string GetTempDirPath(std::string)
+    inline std::string getTempDirPath(std::string)
     {
-        return GetTempDirPath().string();
+        return getTempDirPath().string();
     }
 
-    inline std::filesystem::path GetTempDataFileName()
+    inline std::filesystem::path getTempDataFileName()
     {
-        return GetTempDirPath().replace_filename(SESSIONDATAFILENAME).replace_extension(SESSIONDATAFILEEXTENSION);
+        return getTempDirPath().replace_filename(SESSIONDATAFILENAME).replace_extension(SESSIONDATAFILEEXTENSION);
     }
 
-    inline std::string GetTempDataFileName(std::string)
+    inline std::string getTempDataFileName(std::string)
     {
-        return GetTempDataFileName().string();
+        return getTempDataFileName().string();
     }
 }
 

@@ -17,7 +17,7 @@ public:
 
 private:
     QPushButton btn1;
-    const SessionDataManager* SessionData;
+    const SessionDataManager* sessionData;
 signals:
 };
 

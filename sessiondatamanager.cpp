@@ -7,7 +7,7 @@ using namespace TempDataService;
 
 namespace
 {
-    std::pair<SaveVarKey, std::string> AttemptParse(std::string line)
+    std::pair<SaveVarKey, std::string> attemptParse(std::string line)
     {
         SaveVarKey key;
         std::string val = "";
@@ -19,7 +19,8 @@ namespace
             key = SaveVarKey::COMMENT;
             val = line.substr(4);
         }
-        else if(val.substr(0, 1) == "\t")
+        else if(val.substr(0, 1) == "\t" ||
+                val.substr(0, 1) == " ")
         {
             // If a line starts with an indent, it's a continuation of the
             // previous line.
@@ -57,13 +58,13 @@ SessionDataManager::SessionDataManager()
 
 }
 
-void SessionDataManager::LoadUserData()
+void SessionDataManager::loadUserData()
 {
     cachedStringVars.clear();
     cachedActivePages.clear();
-    cachedOpenPages.clear();
+    cachedViewedPages.clear();
 
-    std::filesystem::path sessionDataFile = GetTempDataFileName();
+    std::filesystem::path sessionDataFile = getTempDataFileName();
     std::fstream inFile(sessionDataFile, std::ios_base::in);
     std::string buf;
 
@@ -73,7 +74,7 @@ void SessionDataManager::LoadUserData()
         SaveVarKey key;
         std::string val;
 
-        std::pair(key,val) = AttemptParse(buf);
+        std::pair(key,val) = attemptParse(buf);
 
         switch(key)
         {
@@ -92,10 +93,10 @@ void SessionDataManager::LoadUserData()
                 // Handle continuation of last active pages
                 cachedActivePages.push_back(val);
             }
-            else if(lastKey == SaveVarKey::LAST_OPEN_PAGES)
+            else if(lastKey == SaveVarKey::LAST_VIEWED_PAGES)
             {
                 // Handle continuation of last open pages
-                cachedOpenPages.push_back(val);
+                cachedViewedPages.push_back(val);
             }
 
             break;
@@ -120,8 +121,8 @@ void SessionDataManager::LoadUserData()
             lastKey = key;
             break;
         }
-        case SaveVarKey::LAST_OPEN_PAGES: {
-            cachedOpenPages.push_back(val);
+        case SaveVarKey::LAST_VIEWED_PAGES: {
+            cachedViewedPages.push_back(val);
             lastKey = key;
             break;
         }
@@ -130,17 +131,17 @@ void SessionDataManager::LoadUserData()
 
 }
 
-void SessionDataManager::SaveUserData()
+void SessionDataManager::saveUserData()
 {
 
 }
 
 template <class ValType>
-ValType SessionDataManager::GetVar(SaveVarKey key)
+ValType SessionDataManager::getVar(SaveVarKey key)
 {
     try
     {
-        static_cast<ValType>(_Get(key));
+        static_cast<ValType>(_get(key));
     }
     catch (...)
     {
@@ -149,11 +150,11 @@ ValType SessionDataManager::GetVar(SaveVarKey key)
 }
 
 template <class ValType>
-void SessionDataManager::SetVar(SaveVarKey key, ValType value)
+void SessionDataManager::setVar(SaveVarKey key, ValType value)
 {
     try
     {
-        _Set(key, static_cast<std::string>(value));
+        _set(key, static_cast<std::string>(value));
     }
     catch (...)
     {
@@ -161,12 +162,23 @@ void SessionDataManager::SetVar(SaveVarKey key, ValType value)
     }
 }
 
-std::string SessionDataManager::_Get(SaveVarKey key)
+void SessionDataManager::getLastViewedPages(PagePtrList& pageList)
+{
+    for(std::string pageStr : cachedViewedPages)
+    {
+        // Create record
+        // Create Page ptr
+        // Add page ptr to the pageList
+        pageList.addPage(nullptr);
+    }
+}
+
+std::string SessionDataManager::_get(SaveVarKey key)
 {
     return cachedStringVars[key];
 }
 
-void SessionDataManager::_Set(SaveVarKey key, std::string value)
+void SessionDataManager::_set(SaveVarKey key, std::string value)
 {
     cachedStringVars[key] = value;
 }

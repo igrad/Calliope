@@ -30,12 +30,12 @@ PageRecord::PageRecord(const PageRecord& record)
 
 PageRecord::~PageRecord()
 {
-    RemoveRecord(this);
+    removeRecord(this);
 }
 
-bool PageRecord::SetIdentifier(QUuid& m_identifier)
+bool PageRecord::setIdentifier(QUuid& m_identifier)
 {
-    if(!IdentifierIsInUse(m_identifier))
+    if(!identifierIsInUse(m_identifier))
     {
         identifier = m_identifier;
 
@@ -63,16 +63,16 @@ PageRecord& GetPageRecord(const QUuid& identifier)
     throw PageRecordNotFound(identifier.toString().toStdString());
 }
 
-PageRecord* PageRecord::GetPageRecord(const QUuid& identifier)
+PageRecord* PageRecord::getPageRecord(const QUuid& identifier)
 {
     return &(*std::find(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), identifier));
 }
 
-PageRecord* PageRecord::MakePageRecord(QUuid& identifier,
+PageRecord* PageRecord::makePageRecord(QUuid& identifier,
                                        std::string relativePath,
                                        std::string fileName)
 {
-    if(IdentifierIsInUse(identifier))
+    if(identifierIsInUse(identifier))
     {
         throw PageIdentifierInUse(identifier);
     }
@@ -81,12 +81,12 @@ PageRecord* PageRecord::MakePageRecord(QUuid& identifier,
     return &ALL_PAGE_RECORDS.back();
 }
 
-void PageRecord::RemoveRecord(PageRecord *record)
+void PageRecord::removeRecord(PageRecord *record)
 {
     std::remove(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), record);
 }
 
-bool PageRecord::IdentifierIsInUse(const QUuid& identifier)
+bool PageRecord::identifierIsInUse(const QUuid& identifier)
 {
     return ALL_PAGE_RECORDS.end() == std::find(ALL_PAGE_RECORDS.begin(), ALL_PAGE_RECORDS.end(), identifier);
 }
@@ -103,7 +103,7 @@ bool PageRecord::operator==(const PageRecord *record) const
 
 void PageRecord::operator=(const PageRecord& record)
 {
-    if(IdentifierIsInUse(identifier))
+    if(identifierIsInUse(identifier))
     {
         throw PageIdentifierInUse(identifier);
     }
@@ -111,7 +111,7 @@ void PageRecord::operator=(const PageRecord& record)
     filePath = record.filePath;
 }
 
-void PageRecord::_LoadRecordsFromFile()
+void PageRecord::_loadRecordsFromFile()
 {
-
+    return;
 }

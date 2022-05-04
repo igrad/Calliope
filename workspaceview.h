@@ -12,7 +12,7 @@ class WorkspaceView : public QWidget
     Q_OBJECT
 
 public:
-    explicit WorkspaceView(const SessionDataManager* SessionData, QWidget* parent = NULL);
+    explicit WorkspaceView(const SessionDataManager* currentSessionData, QWidget* parent = NULL);
 
     void configure();
 
@@ -20,7 +20,7 @@ signals:
 public slots:
 
 private:
-    const SessionDataManager* SessionData;
+    const SessionDataManager* sessionData;
 };
 
 #endif // WORKSPACEVIEW_H

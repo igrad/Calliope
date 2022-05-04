@@ -10,14 +10,14 @@ class PageEditView : public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit PageEditView(const SessionDataManager* sessionData, QWidget *parent = nullptr);
+    explicit PageEditView(const SessionDataManager* loadedSessionData, QWidget *parent = nullptr);
 
     void configure();
 
 signals:
 
 private:
-    const SessionDataManager* SessionData;
+    const SessionDataManager* sessionData;
 };
 
 #endif // PAGEEDITVIEW_H

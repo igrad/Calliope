@@ -13,28 +13,33 @@ SOURCES += \
     UnitTests/Test_PageSaveAndLoad.cpp \
     UnitTests/Test_TempDataPersistence.cpp \
     folder.cpp \
+    folderptrlist.cpp \
     main.cpp \
     mainwindow.cpp \
     menubar.cpp \
     notebook.cpp \
     page.cpp \
     pageeditview.cpp \
+    pageptrlist.cpp \
     pagerecord.cpp \
     sessiondatamanager.cpp \
-    testmanager.cpp \
     workspaceview.cpp
 
 HEADERS += \
     folder.h \
+    folderptrlist.h \
+    folders.h \
+    foldervectorinterface.h \
     mainwindow.h \
     menubar.h \
     notebook.h \
     osdefines.h \
     page.h \
     pageeditview.h \
+    pageptrlist.h \
     pagerecord.h \
+    pages.h \
     sessiondatamanager.h \
-    testmanager.h \
     workspaceview.h
 
 FORMS +=

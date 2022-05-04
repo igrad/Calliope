@@ -6,25 +6,27 @@
 #include "workspaceview.h"
 #include <fstream>
 
+using namespace TempDataService;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , inner(QWidget())
-    , workspaceView(WorkspaceView(&SessionData))
-    , menuBar(MenuBar(&SessionData))
-    , pageEditView(PageEditView(&SessionData))
-    , SessionData(SessionDataManager())
+    , workspaceView(WorkspaceView(&sessionData))
+    , menuBar(MenuBar(&sessionData))
+    , pageEditView(PageEditView(&sessionData))
+    , sessionData(SessionDataManager())
 {
     setCentralWidget(&inner);
     setWindowTitle("Calliope Dev");
 
     QGridLayout gridLayout;
-    ConfigureChildren(gridLayout);
+    configureChildren(gridLayout);
 
     // Fetch temp data
-    LoadUserData();
+    loadUserData();
 
     // Restore back to where we left off!
-//    Initialize();
+    initialize();
 
     // Demo stuff
 //    ui->testTextEdit->setText("Hello world!");
@@ -35,7 +37,7 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::ConfigureChildren(QLayout& gridLayout)
+void MainWindow::configureChildren(QLayout& gridLayout)
 {
     // Individual configures
     workspaceView.configure();
@@ -51,9 +53,15 @@ void MainWindow::ConfigureChildren(QLayout& gridLayout)
     inner.setLayout(&gridLayout);
 }
 
-void MainWindow::LoadUserData()
+void MainWindow::initialize()
 {
-    std::filesystem::path sessionDataFile = GetTempDataFileName();
-    std::fstream f(sessionDataFile, std::ios_base::in);
 
+}
+
+void MainWindow::loadUserData()
+{
+    sessionData.loadUserData();
+
+    // Fetch the last user pages
+    sessionData.getLastViewedPages(lastActivePages);
 }

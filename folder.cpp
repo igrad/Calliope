@@ -1,109 +1,126 @@
 #include "folder.h"
+#include "page.h"
 
 Folder FolderRootFolder();
 
+Folder::Folder():
+    identifier(QUuid()),
+    displayName(""),
+    parent(nullptr)
+{
+
+}
+
 Folder::Folder(QUuid identifier,
-               std::string displayName,
+               const QString displayName,
                Folder* parent):
-    _identifier(identifier),
-    _displayName(displayName),
-    _parent(parent)
+    identifier(identifier),
+    displayName(displayName),
+    parent(parent)
 {
-    _ancestry = *(parent->GetAncestry());
-    _ancestry.push_back(parent);
+
 }
 
-const QUuid& Folder::GetIdentifier() const
+const QUuid& Folder::getIdentifier() const
 {
-    return _identifier;
+    return identifier;
 }
 
-int Folder::GetPageCount()
+QString Folder::getDisplayName() const
 {
-    return _pages.size();
+    return displayName;
 }
 
-int Folder::GetFolderCount()
+int Folder::getPageCount() const
 {
-    return _folders.size();
+    return pages.size();
 }
 
-int Folder::GetItemCount()
+int Folder::getFolderCount() const
 {
-    return GetPageCount() + GetFolderCount();
+    return folders.size();
 }
 
-Folder* Folder::GetParent()
+int Folder::getItemCount() const
 {
-    return _ancestry.back();
+    return getPageCount() + getFolderCount();
 }
 
-std::vector<Folder*>* Folder::GetAncestry()
+Folder* Folder::getParent() const
 {
-    return &_ancestry;
+    return parent;
 }
 
-std::string Folder::GetRelativePathString()
+std::string Folder::getRelativePathString() const
 {
-    if(_ancestry.size() > 0)
+    if(parent)
     {
-        return _ancestry.back()->GetRelativePathString() + "/" + _path.filename().generic_string();
+        return parent->getRelativePathString() + "/" + path.filename().generic_string();
     }
     else
     {
-        return "";
+        return "/";
     }
 }
 
-bool Folder::Contains(const QUuid& identifier)
+bool Folder::contains(const QUuid& identifier) const
 {
-    return _pages.find(identifier) != _pages.end();
+    return pages.find(identifier) != pages.end();
 }
 
-bool Folder::Contains(Page &page)
+bool Folder::contains(Page &page) const
 {
-    return Contains(page.GetIdentifier());
+    return contains(page.getIdentifier());
 }
 
-bool Folder::Contains(Folder &folder)
+bool Folder::contains(Folder &folder) const
 {
-    return Contains(folder.GetIdentifier());
+    return contains(folder.getIdentifier());
 }
 
-bool Folder::Add(Page* page)
+bool Folder::add(Page* page)
 {
-    if(not Contains(*page))
+    if(not contains(*page))
     {
-        _pages.insert({page->GetIdentifier(), page});
+        pages.insert({page->getIdentifier(), page});
         return true;
     }
 
     return false;
 }
 
-bool Folder::Add(Folder* folder)
+bool Folder::add(Folder* folder)
 {
-    if(not Contains(*folder))
+    if(not contains(*folder))
     {
-        _folders.insert({folder->GetIdentifier(), folder});
+        folders.insert({folder->getIdentifier(), folder});
         return true;
     }
 
     return false;
 }
 
-void Folder::Remove(Page* page)
+void Folder::remove(Page* page)
 {
-    if(Contains(*page))
+    if(contains(*page))
     {
-        _pages.erase(page->GetIdentifier());
+        pages.erase(page->getIdentifier());
     }
 }
 
-void Folder::Remove(Folder* folder)
+void Folder::remove(Folder* folder)
 {
-    if(Contains(*folder))
+    if(contains(*folder))
     {
-        _folders.erase(folder->GetIdentifier());
+        folders.erase(folder->getIdentifier());
     }
+}
+
+void Folder::ReassignChildrenRefsToParent()
+{
+    std::map<QUuid, Folder*>::iterator iter = folders.begin();
+    do
+    {
+        iter->second->parent = this;
+    } while(iter++ != folders.end());
 }

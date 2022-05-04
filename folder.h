@@ -1,9 +1,11 @@
 #ifndef FOLDER_H
 #define FOLDER_H
 
+#include "pages.h"
+#include "folders.h"
 #include <map>
-#include "page.h"
 #include <QUuid>
+#include <QObject>
 #include <string>
 #include <vector>
 
@@ -13,42 +15,46 @@
 
 class Page;
 
-
-class Folder
+class Folder: public QObject
 {
+    Q_OBJECT
+
 public:
-    Folder(QUuid identifier,
-           std::string displayName,
-           Folder* parent = nullptr);
+    Folder();
+    Folder(QUuid newIdentifier,
+           const QString newDisplayName,
+           Folder* newParent = nullptr);
 
-    const QUuid& GetIdentifier() const;
-    int GetPageCount();
-    int GetFolderCount();
-    int GetItemCount();
-    Folder* GetParent();
-    std::vector<Folder*>* GetAncestry();
-    std::string GetRelativePathString();
+    const QUuid& getIdentifier() const;
+    QString getDisplayName() const;
+    int getPageCount() const;
+    int getFolderCount() const;
+    int getItemCount() const;
+    Folder* getParent() const;
+    std::string getRelativePathString() const;
 
-    bool Contains(Page &page);
-    bool Contains(const QUuid& identifier);
-    bool Contains(Folder &folder);
+    bool contains(Page &page) const;
+    bool contains(const QUuid& identifier) const;
+    bool contains(Folder &folder) const;
 
-    bool Add(Page* page);
-    bool Add(Folder* folder);
+    bool add(Page* page);
+    bool add(Folder* folder);
 
-    void Remove(Page* page);
-    void Remove(Folder* folder);
+    void remove(Page* page);
+    void remove(Folder* folder);
 
     static Folder RootFolder;
 
 protected:
-    QUuid _identifier;
-    std::string _displayName;
-    std::filesystem::path _path;
-    std::vector<Folder*> _ancestry;
-    Folder* _parent;
-    std::map<QUuid, Folder*> _folders;
-    std::map<QUuid, Page*> _pages;
+    QUuid identifier;
+    QString displayName;
+    std::filesystem::path path;
+    Folder* parent;
+    std::map<QUuid, Folder*> folders;
+    std::map<QUuid, Page*> pages;
+
+private:
+    void ReassignChildrenRefsToParent();
 };
 
 
@@ -66,5 +72,7 @@ struct DetachedFolder : public std::exception
 
     std::string _msg;
 };
+
+
 
 #endif // FOLDER_H

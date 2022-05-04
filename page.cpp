@@ -1,5 +1,5 @@
 #include "page.h"
-
+#include "folder.h"
 
 // Static Constants
 int Page::PAGE_COUNT = 0;
@@ -8,71 +8,86 @@ const std::string Page::PAGE_FILE_EXTENSION = ".md";
 
 
 // Constructor Definitions
+Page::Page()
+{
+    identifier = QUuid::createUuid();
+}
+
 Page::Page(QUuid& identifier,
            std::string fileName,
            Folder* parent)
-    : _identifier(identifier)
-    , _fileName(fileName)
+    : identifier(identifier)
+    , fileName(fileName)
 {
-    if(PageRecord::IdentifierIsInUse(identifier))
+    if(PageRecord::identifierIsInUse(identifier))
     {
         throw PageIdentifierInUse(identifier);
     }
     else
     {
-        _relativePath = parent->GetRelativePathString();
-        MakePageNameValid(_fileName);
-        _pageRecord = PageRecord::MakePageRecord(identifier, _relativePath, _fileName);
-        _identifier = _pageRecord->identifier;
-        _filePath = _pageRecord->filePath;
+        relativePath = parent->getRelativePathString();
+        makePageNameValid(fileName);
+        pageRecord = PageRecord::makePageRecord(identifier, relativePath, fileName);
+        identifier = pageRecord->identifier;
+        filePath = pageRecord->filePath;
     }
 }
 
 Page::Page(PageRecord* record, Folder* parent)
-    : _identifier(record->identifier)
-    , _filePath(record->filePath)
-    , _pageRecord(record)
+    : identifier(record->identifier)
+    , filePath(record->filePath)
+    , pageRecord(record)
 {
-    _relativePath = parent->GetRelativePathString();
-    MakePageNameValid(_fileName);
+    relativePath = parent->getRelativePathString();
+    makePageNameValid(fileName);
 }
 
 
-const QUuid Page::GetIdentifier() const
+const QUuid Page::getIdentifier() const
 {
-    return _identifier;
+    return identifier;
 }
 
-std::filesystem::path Page::GetFilePath() const
+std::filesystem::path Page::getFilePath() const
 {
-    return _filePath;
+    return filePath;
 }
 
-std::string Page::GetData() const
+std::string Page::getData() const
 {
-    return _pageData;
+    return pageData;
 }
 
-void Page::SetData(const std::string data)
+PageRecord* Page::getPageRecord() const
 {
-    _pageData = data;
+    return nullptr;
 }
 
-bool Page::LoadFromFile()
+bool Page::isOpen() const
 {
-    return _LoadPageContentFromFile();
+    return open;
 }
 
-bool Page::SaveToFile()
+void Page::setData(const std::string data)
+{
+    pageData = data;
+}
+
+bool Page::loadFromFile()
+{
+    return _loadPageContentFromFile();
+}
+
+bool Page::saveToFile()
 {
     return true;
 }
 
-bool Page::DeleteFile()
+bool Page::deleteFile()
 {
-    if(_FileExists())
+    if(_fileExists())
     {
-        return remove(_filePath) != 0;
+        return remove(filePath) != 0;
     }
     else
     {
@@ -81,42 +96,42 @@ bool Page::DeleteFile()
     }
 }
 
-bool Page::_FileExists()
+bool Page::_fileExists()
 {
-    return std::filesystem::exists(_filePath);
+    return std::filesystem::exists(filePath);
 }
 
-void Page::_SetIdentifier(const QUuid& identifier)
+void Page::_setIdentifier(const QUuid& newIdentifier)
 {
     // If the identifier is not within the ID_MAP already, it's usable
-    if(IsIdentifierValid(identifier))
+    if(isIdentifierValid(identifier))
     {
-        _identifier = identifier;
+        identifier = newIdentifier;
 
         const std::string path = "";
         ID_MAP[identifier] = path;
 
-        _pageRecord->SetIdentifier(_identifier);
+        pageRecord->setIdentifier(identifier);
     }
 }
 
-bool Page::_LoadPageContentFromFile()
+bool Page::_loadPageContentFromFile()
 {
     std::fstream openFile;
-    _isOpen = false;
+    open = false;
 
     try
     {
-        openFile.open(_filePath, std::ios::in);
+        openFile.open(filePath, std::ios::in);
 
         if(openFile.is_open())
         {
             std::stringstream pageData;
             pageData << openFile.rdbuf();
-            SetData(pageData.str());
+            setData(pageData.str());
             openFile.close();
 
-            _isOpen = true;
+            open = true;
 
             return true;
         }
@@ -130,23 +145,23 @@ bool Page::_LoadPageContentFromFile()
         }
 
         // TODO: Elaborate on this error readout
-        std::cout << "Error reading data from file! path: " << _filePath
+        std::cout << "Error reading data from file! path: " << filePath
                   << std::endl;
         return false;
     }
 }
 
-bool Page::_SavePageContentToFile()
+bool Page::_savePageContentToFile()
 {
     std::fstream openFile;
 
     try
     {
-        openFile.open(_filePath, std::ios::out);
+        openFile.open(filePath, std::ios::out);
 
         if(openFile.is_open())
         {
-            openFile << _pageData;
+            openFile << pageData;
             openFile.close();
         }
 
@@ -160,7 +175,7 @@ bool Page::_SavePageContentToFile()
         }
 
         // TODO: Elaborate on this error readout
-        std::cout << "Error writing data to file! path: " << _filePath << std::endl;
+        std::cout << "Error writing data to file! path: " << filePath << std::endl;
         return false;
     }
 
@@ -169,12 +184,12 @@ bool Page::_SavePageContentToFile()
 
 
 // Static Methods
-bool Page::IsIdentifierValid(const QUuid& identifier)
+bool Page::isIdentifierValid(const QUuid& identifier)
 {
     return ID_MAP.find(identifier) != ID_MAP.end();
 }
 
-void Page::MakePageNameValid(std::string& fileName)
+void Page::makePageNameValid(std::string& fileName)
 {
     char forbiddenChars[10] = {'<', '>', ':', ';', '\"', '/', '\\', '|', '?', '*'};
     int numForbiddenChars = 10;
@@ -190,10 +205,20 @@ void Page::MakePageNameValid(std::string& fileName)
 // Operators
 bool Page::operator==(const Page &rhs)
 {
-    return _identifier == rhs.GetIdentifier();
+    return identifier == rhs.getIdentifier();
 }
 
 bool Page::operator==(const QUuid &rhs)
 {
-    return _identifier == rhs;
+    return identifier == rhs;
+}
+
+void Page::operator=(const Page &rhs)
+{
+    identifier = rhs.getIdentifier();
+    open = rhs.isOpen();
+    filePath = rhs.getFilePath();
+    fileName = filePath.filename().string();
+    pageData = rhs.getData();
+    pageRecord = rhs.getPageRecord();
 }

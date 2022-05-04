@@ -1,7 +1,7 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include "folder.h"
+#include "folders.h"
 #include <fstream>
 #include <iostream>
 #include "pagerecord.h"
@@ -17,28 +17,32 @@ class PageRecord;
 class Page : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit Page(QUuid& identifier = NULLPAGEID,
-                  std::string fileName = "NewPage." + PAGE_FILE_EXTENSION,
-                  Folder* parent = nullptr);
-    Page(PageRecord* record, Folder* parent = nullptr);
+    Page();
+    explicit Page(QUuid& newIdentifier = NULLPAGEID,
+                  std::string newFileName = "NewPage." + PAGE_FILE_EXTENSION,
+                  Folder* newParent = nullptr);
+    Page(PageRecord* newRecord, Folder* newParent = nullptr);
 
     // Getters
-    const QUuid GetIdentifier() const;
-    std::filesystem::path GetFilePath() const;
-    std::string GetData() const;
-    bool IsOpen() const;
+    std::string getData() const;
+    const QUuid getIdentifier() const;
+    std::filesystem::path getFilePath() const;
+    PageRecord* getPageRecord() const;
+    bool isOpen() const;
 
     // Setters
-    void SetData(const std::string data);
+    void setData(const std::string data);
 
     // Static Methods
-    static bool IsIdentifierValid(const QUuid& identifier);
-    static void MakePageNameValid(std::string& fileName);
+    static bool isIdentifierValid(const QUuid& identifier);
+    static void makePageNameValid(std::string& fileName);
 
     // Operators
     bool operator== (const Page& rhs);
     bool operator== (const QUuid& rhs);
+    void operator= (const Page& rhs);
 
     // Static Constants
     static int PAGE_COUNT;
@@ -47,28 +51,27 @@ public:
 
 public slots:
     // Persistence
-    bool LoadFromFile();
-    bool SaveToFile();
-    bool DeleteFile();
+    bool deleteFile();
+    bool loadFromFile();
+    bool saveToFile();
 
 signals:
-    void IdentifierChanged(const QUuid& newIdentifier);
+    void identifierChanged(const QUuid& newIdentifier);
 
 protected:
-    bool _FileExists();
-    void _SetIdentifier(const QUuid& identifier);
-    bool _LoadPageContentFromFile();
-    bool _SavePageContentToFile();
+    bool _fileExists();
+    bool _loadPageContentFromFile();
+    bool _savePageContentToFile();
+    void _setIdentifier(const QUuid& identifier);
 
-    QUuid _identifier;
-    std::string _relativePath;
-    std::string _fileName;
-    std::filesystem::path _filePath;
-
-    bool _isOpen;
-
-    std::string _pageData;
-    PageRecord* _pageRecord;
+    QUuid identifier;
+    bool open;
+    std::filesystem::path filePath;
+    std::string fileName;
+    std::string pageData;
+    PageRecord* pageRecord;
+    Folder* parent;
+    std::string relativePath;
 };
 
 #endif // PAGE_H

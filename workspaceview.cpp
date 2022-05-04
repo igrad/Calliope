@@ -2,9 +2,9 @@
 #include <QFileSystemModel>
 #include <QHBoxLayout>
 
-WorkspaceView::WorkspaceView(const SessionDataManager* sessionData, QWidget* parent)
+WorkspaceView::WorkspaceView(const SessionDataManager* currentSessionData, QWidget* parent)
     : QWidget(parent)
-    , SessionData(sessionData)
+    , sessionData(currentSessionData)
 {
     QFileSystemModel viewer(this);
 }

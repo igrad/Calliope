@@ -23,16 +23,16 @@ public:
     PageRecord(const PageRecord& record);
     ~PageRecord();
 
-    bool SetIdentifier(QUuid& m_identifier);
+    bool setIdentifier(QUuid& m_identifier);
 
     // Static members
-    static PageRecord* GetPageRecord(const QUuid& identifier);
-    static PageRecord* MakePageRecord(QUuid& identifier,
+    static PageRecord* getPageRecord(const QUuid& identifier);
+    static PageRecord* makePageRecord(QUuid& identifier,
                                       const std::string relativePath,
                                       const std::string fileName);
 
-    static void RemoveRecord(PageRecord* record);
-    static bool IdentifierIsInUse(const QUuid& identifier);
+    static void removeRecord(PageRecord* record);
+    static bool identifierIsInUse(const QUuid& identifier);
 
     // Operators
     bool operator== (const QUuid& rhs) const;
@@ -44,10 +44,10 @@ public:
     std::filesystem::path filePath;
 
 signals:
-    void IdentifierChanged(const QUuid& newIdentifier);
+    void identifierChanged(const QUuid& newIdentifier);
 
 private:
-    void _LoadRecordsFromFile();
+    void _loadRecordsFromFile();
 };
 
 

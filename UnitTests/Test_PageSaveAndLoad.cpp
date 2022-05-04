@@ -11,46 +11,46 @@ class Test_PageSaveAndLoad: public QObject
     Q_OBJECT
 
 private slots:
-    void SaveToFile()
+    void saveToFile()
     {
         QUuid pageID = QUuid::createUuid();
         Page page(pageID, "z_test_page.md", nullptr);
 
-        page.SetData(TESTSTRING);
-        page.SaveToFile();
+        page.setData(TESTSTRING);
+        page.saveToFile();
 
-        page.SetData("");
-        QVERIFY(page.GetData() == "");
+        page.setData("");
+        QVERIFY(page.getData() == "");
 
-        page.LoadFromFile();
-        QVERIFY(page.GetData() == TESTSTRING);
+        page.loadFromFile();
+        QVERIFY(page.getData() == TESTSTRING);
 
-        page.DeleteFile();
+        page.deleteFile();
     }
 
-    void LoadFromFile()
+    void loadFromFile()
     {
         QUuid pageID = QUuid::createUuid();
         Page page(pageID, "z_test_page.md", nullptr);
 
-        page.SetData(TESTSTRING);
-        page.SaveToFile();
+        page.setData(TESTSTRING);
+        page.saveToFile();
 
         Page loadedPage(pageID, "z_test_page.md", nullptr);
-        loadedPage.SetData("");
+        loadedPage.setData("");
 
-        loadedPage.LoadFromFile();
-        QVERIFY(loadedPage.GetData() == TESTSTRING);
+        loadedPage.loadFromFile();
+        QVERIFY(loadedPage.getData() == TESTSTRING);
 
-        page.DeleteFile();
-        loadedPage.DeleteFile();
+        page.deleteFile();
+        loadedPage.deleteFile();
     }
 
-    void DeleteFile()
+    void deleteFile()
     {
         QUuid pageID = QUuid::createUuid();
         Page page(pageID, "z_test_page.md", nullptr);
 
-        QVERIFY(page.DeleteFile() == true);
+        QVERIFY(page.deleteFile() == true);
     }
 };
