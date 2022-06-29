@@ -1,11 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "notebook.h"
 #include "menubar.h"
 #include "pages.h"
 #include "pageeditview.h"
 #include "workspaceview.h"
 #include <QMainWindow>
+#include <QString>
 
 using namespace TempDataService;
 
@@ -27,6 +29,7 @@ public:
     PageEditView pageEditView;
 
 private:
+    Notebook notebook;
     PagePtrList lastActivePages;
     PagePtrList loadedPages;
     SessionDataManager sessionData;

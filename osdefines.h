@@ -7,8 +7,9 @@
 
 namespace TempDataService
 {
-    constexpr char SESSIONDATAFILENAME[] = "sessiondata";
-    constexpr char SESSIONDATAFILEEXTENSION[] = ".json";
+    constexpr char GLOBAL_CONFIG_FILENAME[] = "CalliopeUniversalConfigs";
+    constexpr char NOTEBOOK_CONFIG_FILENAME[] = "sessiondata";
+    constexpr char CONFIG_FILE_EXTENSION[] = ".txt";
 
     inline std::string getOperatingSystem()
     {
@@ -34,19 +35,24 @@ namespace TempDataService
         return std::filesystem::temp_directory_path();
     }
 
+    inline std::filesystem::path getCurrentPath()
+    {
+        return std::filesystem::current_path();
+    }
+
     inline std::string getTempDirPath(std::string)
     {
         return getTempDirPath().string();
     }
 
-    inline std::filesystem::path getTempDataFileName()
+    inline std::filesystem::path getGlobalConfigFileName()
     {
-        return getTempDirPath().replace_filename(SESSIONDATAFILENAME).replace_extension(SESSIONDATAFILEEXTENSION);
+        return getTempDirPath().replace_filename(GLOBAL_CONFIG_FILENAME).replace_extension(CONFIG_FILE_EXTENSION);
     }
 
-    inline std::string getTempDataFileName(std::string)
+    inline std::filesystem::path getNotebookConfigFileName()
     {
-        return getTempDataFileName().string();
+        return getCurrentPath().replace_filename(NOTEBOOK_CONFIG_FILENAME).replace_extension(CONFIG_FILE_EXTENSION);
     }
 }
 

@@ -9,14 +9,15 @@ const std::string Page::PAGE_FILE_EXTENSION = ".md";
 
 // Constructor Definitions
 Page::Page()
+    : identifier(QUuid::createUuid())
+    , fileName("")
 {
-    identifier = QUuid::createUuid();
 }
 
-Page::Page(QUuid& identifier,
+Page::Page(QUuid& newIdentifier,
            std::string fileName,
            Folder* parent)
-    : identifier(identifier)
+    : identifier(newIdentifier)
     , fileName(fileName)
 {
     if(PageRecord::identifierIsInUse(identifier))

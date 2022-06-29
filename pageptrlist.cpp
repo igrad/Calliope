@@ -25,3 +25,8 @@ void PagePtrList::removePage(const QUuid &pageIdentifier)
         return pageIdentifier == page->getIdentifier();
     });
 }
+
+Page* PagePtrList::operator[](int index)
+{
+    return vector[index];
+}

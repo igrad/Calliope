@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    UnitTests/Test_ConfigAndSessionData.cpp \
     UnitTests/Test_FolderStructurePersistence.cpp \
     UnitTests/Test_PageSaveAndLoad.cpp \
     UnitTests/Test_TempDataPersistence.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     workspaceview.cpp
 
 HEADERS += \
+    Helpers/fileoperationshelper.h \
     folder.h \
     folderptrlist.h \
     folders.h \

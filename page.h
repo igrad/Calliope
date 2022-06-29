@@ -20,9 +20,9 @@ class Page : public QObject
 
 public:
     Page();
-    explicit Page(QUuid& newIdentifier = NULLPAGEID,
-                  std::string newFileName = "NewPage." + PAGE_FILE_EXTENSION,
-                  Folder* newParent = nullptr);
+    Page(QUuid& newIdentifier = NULLPAGEID,
+         std::string newFileName = "NewPage." + PAGE_FILE_EXTENSION,
+         Folder* newParent = nullptr);
     Page(PageRecord* newRecord, Folder* newParent = nullptr);
 
     // Getters

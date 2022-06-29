@@ -16,6 +16,8 @@ public:
     Page* getPage(const QUuid& pageIdentifier);
     void removePage(const QUuid& pageIdentifier);
 
+    Page* operator[](int index);
+
 private:
     PagePtrVector vector;
 };

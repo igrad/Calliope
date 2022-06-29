@@ -14,8 +14,18 @@ MainWindow::MainWindow(QWidget *parent)
     , workspaceView(WorkspaceView(&sessionData))
     , menuBar(MenuBar(&sessionData))
     , pageEditView(PageEditView(&sessionData))
+    , notebook()
     , sessionData(SessionDataManager())
 {
+    // 1. Fetch the system configs data
+    sessionData.loadSystemData();
+
+    // current notebook location = sessionData.notebook location
+    // 2. Fetch the most recent notebook configs, or use defaults
+    // 3. Initialize UI based on session data params
+    // 4. Load plugins
+    // 5. Load most recent page(s)
+    // 6. Publish to screen
     setCentralWidget(&inner);
     setWindowTitle("Calliope Dev");
 
@@ -55,13 +65,21 @@ void MainWindow::configureChildren(QLayout& gridLayout)
 
 void MainWindow::initialize()
 {
+    // Create Notebook object
 
 }
 
 void MainWindow::loadUserData()
 {
-    sessionData.loadUserData();
+    sessionData.loadSystemData();
+    if(sessionData.autoLoadLastNotebook)
+    {
+        sessionData.loadNotebookData();
+    }
 
     // Fetch the last user pages
     sessionData.getLastViewedPages(lastActivePages);
+
+    // Restore the last user page(s)
+//    pageEditView.setPlainText(QString(lastActivePages[0]->getData().c_str()));
 }

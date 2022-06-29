@@ -2,11 +2,13 @@
 #define NOTEBOOK_H
 
 #include "folder.h"
+#include "pagerecord.h"
 #include <QUuid>
 
 class Notebook: public Folder
 {
 public:
+    Notebook();
     Notebook(QUuid identifier,
              const QString displayName,
              Folder* parent);
@@ -17,9 +19,9 @@ public:
 private:
     FolderPtrVector folders;
     PagePtrVector pages;
+    QVector<PageRecord> records;
 
     QString displayName;
-    QUuid identifier;
 
     std::filesystem::path dataFilePath;
 };
